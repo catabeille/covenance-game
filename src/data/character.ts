@@ -6,6 +6,23 @@
 import type { Approach, PronounSet } from '../engine/types.ts'
 
 /**
+ * Portrait files live under `public/portraits/` and are served relative to
+ * the app's base path — plain `/portraits/x.png` only resolves when the app
+ * is hosted at the domain root. On a GitHub Pages project site it's hosted
+ * under `/<repo>/`, so every reference has to go through `import.meta.env
+ * .BASE_URL` (set by `base` in vite.config.ts) instead of a bare leading
+ * slash, or the images 404 the moment this isn't served from root.
+ *
+ * The `?? '/'` fallback is for `scripts/check-story.ts`, which imports this
+ * module under plain `node`, outside Vite — there `import.meta.env` is
+ * `undefined` rather than injected, and the fallback is never rendered
+ * anywhere, only referenced by the validator.
+ */
+function portraitPath(filename: string): string {
+  return `${import.meta.env?.BASE_URL ?? '/'}portraits/${filename}`
+}
+
+/**
  * they/them is first so it is the default selection: it is the set that is
  * correct for a character whose player has not told us anything yet.
  */
@@ -86,17 +103,17 @@ export type PortraitOption = {
  *
  * Delete this file and every undrawn character falls back to its glyph again.
  */
-export const SUBSTITUTE_PORTRAIT = '/portraits/substitute-png.png'
+export const SUBSTITUTE_PORTRAIT = portraitPath('substitute-png.png')
 
 /** Native size of the pixel art. The frame is an exact 2x of this. */
 export const PORTRAIT_PIXEL_WIDTH = 50
 export const PORTRAIT_PIXEL_HEIGHT = 80
 
 export const PORTRAITS: PortraitOption[] = [
-  { id: 'mc-01', label: 'First', file: '/portraits/mc-01.png', glyph: '☾' },
-  { id: 'mc-02', label: 'Second', file: '/portraits/mc-02.png', glyph: '✧' },
-  { id: 'mc-03', label: 'Third', file: '/portraits/mc-03.png', glyph: '❈' },
-  { id: 'mc-04', label: 'Fourth', file: '/portraits/mc-04.png', glyph: '⁂' },
+  { id: 'mc-01', label: 'First', file: portraitPath('mc-01.png'), glyph: '☾' },
+  { id: 'mc-02', label: 'Second', file: portraitPath('mc-02.png'), glyph: '✧' },
+  { id: 'mc-03', label: 'Third', file: portraitPath('mc-03.png'), glyph: '❈' },
+  { id: 'mc-04', label: 'Fourth', file: portraitPath('mc-04.png'), glyph: '⁂' },
 ]
 
 /**
@@ -117,19 +134,19 @@ export const CAST_PORTRAITS: Record<string, PortraitOption> = {
   'warden-kreon': {
     id: 'warden-kreon',
     label: 'Warden Kreon Ithamar',
-    file: '/portraits/warden-kreon.png',
+    file: portraitPath('warden-kreon.png'),
     glyph: '⚱',
   },
   'sister-kassia': {
     id: 'sister-kassia',
     label: 'Sister Kassia Miriam',
-    file: '/portraits/sister-kassia.png',
+    file: portraitPath('sister-kassia.png'),
     glyph: '✝',
   },
   'factor-lysias': {
     id: 'factor-lysias',
     label: 'Lysias Argyros',
-    file: '/portraits/factor-lysias.png',
+    file: portraitPath('factor-lysias.png'),
     glyph: '⚖',
   },
 
@@ -137,43 +154,43 @@ export const CAST_PORTRAITS: Record<string, PortraitOption> = {
   'aglaia-simeon': {
     id: 'aglaia-simeon',
     label: 'Aglaia Simeon',
-    file: '/portraits/aglaia-simeon.png',
+    file: portraitPath('aglaia-simeon.png'),
     glyph: '✧',
   },
   'chrysanthe-barsabbas': {
     id: 'chrysanthe-barsabbas',
     label: 'Chrysanthe Barsabbas',
-    file: '/portraits/chrysanthe-barsabbas.png',
+    file: portraitPath('chrysanthe-barsabbas.png'),
     glyph: '◉',
   },
   'erato-salome': {
     id: 'erato-salome',
     label: 'Erato Salome',
-    file: '/portraits/erato-salome.png',
+    file: portraitPath('erato-salome.png'),
     glyph: '❧',
   },
   'phaedra-kayin': {
     id: 'phaedra-kayin',
     label: 'Phaedra Kayin',
-    file: '/portraits/phaedra-kayin.png',
+    file: portraitPath('phaedra-kayin.png'),
     glyph: '†',
   },
   'demetria-thomas': {
     id: 'demetria-thomas',
     label: 'Demetria Thomas',
-    file: '/portraits/demetria-thomas.png',
+    file: portraitPath('demetria-thomas.png'),
     glyph: '❦',
   },
   'orestes-iakov': {
     id: 'orestes-iakov',
     label: 'Orestes Iakov',
-    file: '/portraits/orestes-iakov.png',
+    file: portraitPath('orestes-iakov.png'),
     glyph: '‡',
   },
   'hypnos-joseph': {
     id: 'hypnos-joseph',
     label: 'Hypnos Joseph',
-    file: '/portraits/hypnos-joseph.png',
+    file: portraitPath('hypnos-joseph.png'),
     glyph: '☾',
   },
 
@@ -181,7 +198,7 @@ export const CAST_PORTRAITS: Record<string, PortraitOption> = {
   'enoch-aletheia': {
     id: 'enoch-aletheia',
     label: 'Enoch Aletheia',
-    file: '/portraits/enoch-aletheia.png',
+    file: portraitPath('enoch-aletheia.png'),
     glyph: '✦',
   },
 }

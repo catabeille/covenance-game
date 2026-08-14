@@ -11,6 +11,11 @@ import { defineConfig } from 'vite'
  * meant to sit on the open internet long-term.
  */
 export default defineConfig({
+  // Served from https://catabeille.github.io/covenance-game/ — a project
+  // Pages site sits under a subpath, not the domain root, so every asset
+  // reference (this bundle's own, and the portrait paths in character.ts)
+  // has to be built relative to this instead of assuming `/`.
+  base: '/covenance-game/',
   preview: {
     allowedHosts: true,
   },
