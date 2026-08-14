@@ -534,6 +534,11 @@ body {
   white-space: pre;
   overflow-x: auto;
   text-align: center;
+  /* .screen is a flex column with the default stretch — without this the
+     pre fills the full column width before text-align gets a say, so a
+     piece narrower than the column centers its own short lines inside a
+     wide box instead of the box itself sitting centered. */
+  align-self: center;
 }
 
 .stage {
@@ -703,6 +708,13 @@ body {
   background: rgba(6, 7, 9, 0.72);
   display: flex;
   justify-content: flex-end;
+  /* `.screen` sets z-index: 1 to sit above the fixed sky background, which
+     — since it's an explicit positive value — paints above any sibling left
+     at the default z-index: auto, `.overlay` included, regardless of DOM
+     order or `position: fixed`. Without this, anything positioned inside
+     `.screen` (the walker sprite, portraits) shows through on top of the
+     notebook/verdict/reckoning panels instead of being covered by them. */
+  z-index: 10;
 }
 
 .notebook {
