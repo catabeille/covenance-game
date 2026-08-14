@@ -1,0 +1,1289 @@
+/* ==================================================================
+   Covenance — one committed dark look. Parchment on wet slate.
+   ================================================================== */
+
+:root {
+  --ink: #0d0f12;
+  --ink-raised: #15181e;
+  --ink-line: #262b34;
+  --parchment: #d9d3c6;
+  --parchment-dim: #8e887b;
+  --parchment-faint: #5d5a52;
+  --gold: #c9a227;
+  --gold-dim: #7d6717;
+  --rust: #a8563c;
+
+  /* Set from JS by ui/sky.ts. 0 = on the horizon, 1 = fully risen. */
+  --sun-rise: 0.06;
+  --moon-rise: 0.34;
+  /* 0 = night and safety, 1 = daylight and exposure. */
+  --exposure: 0.12;
+
+  /* The two ends of the world. Judgement on the left, quiet on the right. */
+  --dawn: #4a2434;
+  --dusk: #1d2733;
+
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --mono: 'Cascadia Mono', Consolas, 'DejaVu Sans Mono', ui-monospace, monospace;
+
+  --measure: 78rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+/**
+ * The world is graded left to right — reddish dawn where the sun sits, greyish
+ * blue where the moon does. As the sun climbs, the dawn side floods across and
+ * the whole page gets warmer and more exposed. `--exposure` does that work.
+ */
+body {
+  background:
+    radial-gradient(
+      ellipse 120% 60% at 8% 100%,
+      rgba(168, 86, 60, calc(0.05 + var(--exposure) * 0.42)) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 110% 55% at 94% 100%,
+      rgba(120, 150, 180, calc(0.16 - var(--exposure) * 0.11)) 0%,
+      transparent 72%
+    ),
+    linear-gradient(
+      100deg,
+      color-mix(in oklab, var(--dawn) calc(38% + var(--exposure) * 46%), var(--ink)) 0%,
+      var(--ink) 46%,
+      color-mix(in oklab, var(--dusk) calc(52% - var(--exposure) * 26%), var(--ink)) 100%
+    );
+  background-attachment: fixed;
+  color: var(--parchment);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background 1400ms ease;
+}
+
+#app {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* `safe` keeps the top of tall content reachable instead of clipping it
+     off-screen above the viewport when it exceeds 100vh — plain `center`
+     stands as the fallback for browsers that don't parse the safe keyword. */
+  align-items: safe center;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+/* ------------------------------------------------------------------
+   The sky — a sun on the left horizon, a moon on the right, always
+   ------------------------------------------------------------------ */
+
+.sky {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: min(34vh, 15rem);
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sky__band {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, calc(0.34 - var(--exposure) * 0.18)) 0%,
+    transparent 100%
+  );
+}
+
+.sky__horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 clamp(0.5rem, 4vw, 3rem);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--parchment-faint);
+  opacity: 0.32;
+}
+
+.orb {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  transition: transform 1400ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 1400ms ease;
+}
+
+.orb__body {
+  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+  line-height: 1;
+}
+
+.orb__rays {
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+/* Rise is expressed as a fraction of the sky's height. */
+.orb--sun {
+  left: clamp(1rem, 7vw, 5rem);
+  color: #d98a5f;
+  opacity: calc(0.28 + var(--sun-rise) * 0.72);
+  transform: translateY(calc(var(--sun-rise) * -1 * (min(34vh, 15rem) - 3.5rem)));
+  text-shadow: 0 0 calc(0.4rem + var(--sun-rise) * 1.6rem) rgba(217, 138, 95, 0.65);
+}
+
+.orb--moon {
+  right: clamp(1rem, 7vw, 5rem);
+  color: #cfd8e4;
+  opacity: calc(0.28 + var(--moon-rise) * 0.72);
+  transform: translateY(calc(var(--moon-rise) * -1 * (min(34vh, 15rem) - 3.5rem)));
+  text-shadow: 0 0 calc(0.4rem + var(--moon-rise) * 1.4rem) rgba(207, 216, 228, 0.5);
+}
+
+.screen {
+  position: relative;
+  z-index: 1;
+}
+
+.screen {
+  width: 100%;
+  max-width: var(--measure);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------ */
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 120ms, color 120ms, background 120ms;
+}
+
+.btn:hover {
+  border-color: var(--gold-dim);
+  color: #fff;
+}
+
+.btn:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.btn--primary {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+
+.btn--primary:hover {
+  background: #1d2029;
+  color: var(--gold);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--parchment-dim);
+  padding: 0.4rem 0.7rem;
+}
+
+.btn--ghost:hover {
+  color: var(--parchment);
+  border-color: var(--ink-line);
+}
+
+/* ------------------------------------------------------------------
+   Title screen
+   ------------------------------------------------------------------ */
+
+.screen--title {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80vh;
+}
+
+.title__mark {
+  font-family: var(--mono);
+  color: var(--parchment-faint);
+  font-size: clamp(0.6rem, 1.6vw, 0.85rem);
+  line-height: 1.15;
+  margin: 0;
+  white-space: pre;
+}
+
+.title__name {
+  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  margin: 0;
+  color: var(--parchment);
+}
+
+.title__tagline {
+  color: var(--parchment-dim);
+  font-style: italic;
+  margin: 0;
+  max-width: 34ch;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  min-width: 14rem;
+}
+
+.menu--row {
+  flex-direction: row;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.menu__note {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--parchment-faint);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   Character creation
+   ------------------------------------------------------------------ */
+
+.create__heading {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--parchment);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field__label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+.field__hint {
+  font-size: 0.85rem;
+  color: var(--parchment-dim);
+  margin: -0.25rem 0 0;
+}
+
+.field__hint code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--parchment);
+}
+
+.field__input {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--parchment);
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.6rem 0.8rem;
+  max-width: 22rem;
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--parchment-dim);
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+}
+
+.chip--on {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.75rem;
+  text-align: left;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  color: var(--parchment);
+  font-family: var(--serif);
+}
+
+.card--on {
+  border-color: var(--gold-dim);
+}
+
+.card__glyph {
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 1.6rem;
+  color: var(--gold);
+}
+
+.card__name {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.card__blurb {
+  font-size: 0.9rem;
+  color: var(--parchment-dim);
+  line-height: 1.45;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.slot {
+  width: 100px;
+  height: 160px;
+  display: grid;
+  place-items: center;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+}
+
+.slot--on {
+  border-color: var(--gold-dim);
+}
+
+.create__error {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--rust);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   Portraits — glyph until the png loads
+   ------------------------------------------------------------------ */
+
+.portrait,
+.slot {
+  position: relative;
+}
+
+/**
+ * Sized to an exact 2x of the 50x80 source, in whole pixels rather than rem.
+ * Pixel art only stays crisp on integer scale factors — at 1.7x or 2.3x the
+ * browser has to invent partial source pixels and `pixelated` turns that into
+ * visibly uneven blockiness. If the art's native size changes, change these
+ * two numbers to match a whole multiple of it.
+ */
+.portrait {
+  margin: 0;
+  width: 100px;
+  min-width: 100px;
+  height: 160px;
+  display: grid;
+  place-items: center;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.portrait__glyph {
+  font-size: 2.4rem;
+  color: var(--gold-dim);
+}
+
+/**
+ * Portraits are 60×80 pixel art, upscaled roughly 2.4× into the frame.
+ * `pixelated` keeps the nearest-neighbour edges crisp instead of letting the
+ * browser smooth them into mush.
+ */
+.portrait__img,
+.slot .portrait__img {
+  display: none;
+  width: 100%;
+  height: 100%;
+  /* `contain`, not `cover` — a portrait that is not exactly 5:8 letterboxes
+     inside the frame instead of having its head and feet cropped off. */
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.has-img .portrait__glyph {
+  display: none;
+}
+
+.has-img .portrait__img {
+  display: block;
+}
+
+/* ------------------------------------------------------------------
+   Scene
+   ------------------------------------------------------------------ */
+
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--ink-line);
+  padding-bottom: 0.6rem;
+}
+
+.hud__act {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.1rem 0.5rem;
+}
+
+.hud__location {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--parchment-dim);
+}
+
+.hud__spacer {
+  flex: 1;
+}
+
+.hud__count {
+  color: var(--gold-dim);
+}
+
+.art {
+  font-family: var(--mono);
+  font-size: clamp(0.68rem, 1.8vw, 1.15rem);
+  line-height: 1.2;
+  color: var(--parchment-faint);
+  margin: 0;
+  white-space: pre;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.stage {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.prose {
+  flex: 1;
+  min-width: 0;
+}
+
+.prose p {
+  margin: 0 0 1rem;
+  max-width: 68ch;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+.prose strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.speaker {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.divider {
+  font-family: var(--mono);
+  color: var(--ink-line);
+  margin: 0;
+  overflow-x: hidden;
+  font-size: 0.8rem;
+}
+
+/* ------------------------------------------------------------------
+   Choices
+   ------------------------------------------------------------------ */
+
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.choice {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  color: var(--parchment);
+  background: transparent;
+  border: 1px solid var(--ink-line);
+  border-left: 2px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+}
+
+.choice:hover {
+  background: var(--ink-raised);
+  border-left-color: var(--gold);
+}
+
+.choice:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.choice__key {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--parchment-faint);
+}
+
+.choice__text {
+  flex: 1;
+}
+
+.choice--locked {
+  cursor: not-allowed;
+  border-style: dashed;
+  color: var(--parchment-faint);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.choice--locked:hover {
+  background: transparent;
+  border-left-color: var(--ink-line);
+}
+
+.choice__hint {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-style: normal;
+  color: var(--gold-dim);
+}
+
+/* ------------------------------------------------------------------
+   Clue toast
+   ------------------------------------------------------------------ */
+
+.toast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  border-left: 2px solid var(--gold-dim);
+  background: var(--ink-raised);
+  padding: 0.5rem 0.9rem;
+  animation: fade-in 400ms ease-out;
+}
+
+.toast__label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.toast__clue {
+  font-style: italic;
+  color: var(--parchment);
+}
+
+.toast__sep {
+  color: var(--gold-dim);
+  font-style: normal;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Notebook
+   ------------------------------------------------------------------ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 7, 9, 0.72);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notebook {
+  width: min(30rem, 100%);
+  height: 100%;
+  overflow-y: auto;
+  background: var(--ink-raised);
+  border-left: 1px solid var(--ink-line);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.notebook__head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--ink-line);
+  padding-bottom: 0.75rem;
+}
+
+.notebook__head h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: var(--mono);
+}
+
+.notebook__count {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--parchment-faint);
+}
+
+.notebook__empty {
+  color: var(--parchment-dim);
+  font-style: italic;
+}
+
+.note__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.note__heading {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin: 0;
+}
+
+.note__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.note__name {
+  margin: 0;
+  color: var(--gold);
+}
+
+.note__text {
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+  color: var(--parchment-dim);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------
+   Suspicion
+   ------------------------------------------------------------------ */
+
+.heat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--parchment-faint);
+  cursor: default;
+}
+
+.heat__pips {
+  letter-spacing: 0.1em;
+  color: var(--parchment-dim);
+}
+
+.heat--high .heat__pips {
+  color: var(--rust);
+}
+
+/* ------------------------------------------------------------------
+   Verdict board
+   ------------------------------------------------------------------ */
+
+.overlay--center {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.board {
+  width: min(46rem, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.board__head {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--ink-line);
+  padding-bottom: 0.75rem;
+}
+
+.board__head h2 {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.board__intro {
+  margin: 0;
+  color: var(--parchment-dim);
+  font-style: italic;
+}
+
+.prop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-left: 2px solid var(--ink-line);
+  padding-left: 1rem;
+}
+
+.prop__title {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin: 0;
+}
+
+.prop__sentence {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 2.1;
+}
+
+.blank {
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  color: var(--parchment-faint);
+  background: #10131a;
+  border: none;
+  border-bottom: 1px solid var(--gold-dim);
+  border-radius: 0;
+  padding: 0.15rem 0.4rem;
+  margin: 0 0.15rem;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.blank:hover {
+  background: #171b24;
+}
+
+.blank:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.blank--filled {
+  color: var(--gold);
+}
+
+.blank option {
+  background: var(--ink-raised);
+  color: var(--parchment);
+}
+
+.board__status {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--ink-line);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--parchment-faint);
+}
+
+.board__status--ready {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------------
+   The reckoning — ordering the evidence
+   ------------------------------------------------------------------ */
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  counter-reset: step;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 0.9rem;
+  align-items: start;
+  background: #10131a;
+  border: 1px solid var(--ink-line);
+  border-left: 2px solid var(--gold-dim);
+  padding: 0.75rem 0.9rem;
+}
+
+.step__index {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--gold-dim);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.15rem;
+}
+
+.step__body {
+  min-width: 0;
+}
+
+.step__name {
+  margin: 0;
+  color: var(--parchment);
+}
+
+.step__text {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--parchment-dim);
+}
+
+.step__moves {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nudge {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--parchment-dim);
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  width: 1.9rem;
+  height: 1.6rem;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms;
+}
+
+.nudge:hover:not(:disabled) {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.nudge:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.nudge:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.hud__ready {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------------
+   The walkable road
+   ------------------------------------------------------------------ */
+
+.walk {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.walk__viewport {
+  position: relative;
+  height: 19rem;
+  overflow: hidden;
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
+  /* The road is its own space; the page ground shows through above it. */
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+.walk__stage {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  /* transform is set per frame by the walk loop — no CSS transition here,
+     or the camera would lag a frame behind the walker and swim. */
+  will-change: transform;
+}
+
+.walk__ground {
+  position: absolute;
+  left: 0;
+  bottom: 2.25rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ink-line) 6%,
+    var(--ink-line) 94%,
+    transparent 100%
+  );
+}
+
+.walk__waypoint {
+  position: absolute;
+  bottom: 2.15rem;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--parchment-faint);
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.walk__landmark,
+.walk__walker {
+  position: absolute;
+  bottom: 2.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.walk__art {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  line-height: 1.15;
+  color: var(--parchment-faint);
+  margin: 0;
+  white-space: pre;
+  opacity: 0.65;
+  transition: opacity 300ms, color 300ms;
+}
+
+.walk__mark {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  color: var(--parchment-faint);
+  transition: color 300ms;
+}
+
+.walk__sprite {
+  margin: 0;
+  width: 100px;
+  height: 160px;
+  display: grid;
+  place-items: center;
+}
+
+.walk__sprite .portrait__glyph {
+  font-size: 2rem;
+  color: var(--gold-dim);
+}
+
+.walk__sprite--you {
+  transform: scaleX(var(--facing, 1));
+}
+
+.walk__walker {
+  z-index: 2;
+}
+
+/* Standing close enough to attend. */
+.is-near .walk__art,
+.is-near .walk__mark {
+  opacity: 1;
+  color: var(--gold-dim);
+}
+
+.walk__label {
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 240ms, transform 240ms;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.is-near .walk__label {
+  opacity: 1;
+  transform: none;
+}
+
+/* A landmark already attended reads as "done" even from a distance — dimmer
+   scenery, a muted label, a small check — so the road tells you at a glance
+   what is left to see instead of making you revisit everything to find out. */
+.is-visited .walk__art,
+.is-visited .walk__mark {
+  opacity: 0.4;
+}
+
+.is-visited .walk__label {
+  color: var(--parchment-faint);
+}
+
+.is-visited.is-near .walk__label {
+  color: var(--gold-dim);
+}
+
+.walk__check {
+  color: var(--gold-dim);
+}
+
+.walk__hud {
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.walk__attend {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  color: var(--parchment);
+  background: var(--ink-raised);
+  border: 1px solid var(--gold-dim);
+  border-radius: 2px;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.walk__attend:hover {
+  background: #1d2029;
+}
+
+.walk__attend:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.walk__hint {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--parchment-faint);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.walk__key {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--gold-dim);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.05rem 0.4rem;
+}
+
+@media (max-width: 40rem) {
+  .walk__viewport {
+    height: 11rem;
+  }
+
+  .walk__sprite {
+    width: 50px;
+    height: 80px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Hidden text — words written in the page's own colour
+   ------------------------------------------------------------------ */
+
+/**
+ * Invisible until dragged over. `color: transparent` keeps the glyphs in the
+ * layout (so the gap is the right width and the line does not reflow when it
+ * is found), while the selection highlight makes them legible.
+ */
+.secret {
+  color: transparent;
+  background: transparent;
+  cursor: text;
+  border-radius: 1px;
+  transition: color 700ms ease, background 700ms ease;
+}
+
+.secret::selection {
+  color: var(--gold);
+  background: rgba(201, 162, 39, 0.16);
+}
+
+.secret--found {
+  color: var(--gold);
+  background: rgba(201, 162, 39, 0.07);
+  box-shadow: inset 0 -1px 0 rgba(201, 162, 39, 0.35);
+}
+
+.note__glyph {
+  color: var(--gold-dim);
+  margin-right: 0.35rem;
+}
+
+.error {
+  font-family: var(--mono);
+  color: var(--rust);
+}
+
+/* ------------------------------------------------------------------
+   Narrow screens
+   ------------------------------------------------------------------ */
+
+@media (max-width: 40rem) {
+  .stage {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Drop to a clean 1x rather than a fractional shrink. */
+  .portrait {
+    width: 50px;
+    min-width: 50px;
+    height: 80px;
+  }
+
+  .prose {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
