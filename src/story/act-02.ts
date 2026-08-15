@@ -64,8 +64,12 @@ Nobody asks for the rosary back. Nobody would be so crude. It simply sits in you
   },
 
   {
+    // A world scene, same as Act I's shrine — every goto pointing at
+    // 'fold-hub' returns the player to the road, standing where they left
+    // off.
     id: 'fold-hub',
     act: ACT,
+    world: 'fold',
     location: 'The second station — the fold',
     art: 'fold',
     body: `The procession files between the houses and into the church, and the singing starts, and does not stop for a long while.
@@ -74,19 +78,10 @@ Nobody asks for the rosary back. Nobody would be so crude. It simply sits in you
 
 Forty voices, none of them trained, every one of them certain. It is beautiful. It has always been beautiful, and nothing you are about to learn will make it less so — which is exactly the trouble. Beauty was never proof of anything.
 
-You are not needed for this part. You are needed at the end of it — which means you have exactly as long as the singing lasts.`,
-    choices: [
-      { text: 'Go into the church.', goto: 'chapel' },
-      { text: 'Stay out in the yard with the ones who did not go in.', goto: 'yard' },
-      { text: 'Find the one in the very good coat.', goto: 'lysias' },
-      {
-        text: 'Ask where the Chapter keeps its accounts.',
-        goto: 'counting-room',
-        needs: { clue: 'lysias-office' },
-        lockedHint: 'You do not yet know there are accounts, or whose they are.',
-      },
-      { text: 'Go up when the singing stops.', goto: 'act-two-close' },
-    ],
+You are not needed for this part. You are needed at the end of it — which means you have exactly as long as the singing lasts.
+
+Not everybody goes in. There are always those with something to carry, something to stir, something to count, and they stand about the yard in twos and threes with the singing coming out through the door at them, glad of the company.`,
+    choices: [],
   },
 
   /* ---------------------------------------------------------------- */
@@ -209,26 +204,6 @@ She lays her hand flat on the cover, the way you hold down a thing that is tryin
   /* ---------------------------------------------------------------- */
 
   {
-    id: 'yard',
-    act: ACT,
-    location: 'The church yard',
-    art: 'cathedral-grand',
-    body: `Not everybody goes in. There are always those with something to carry, something to stir, something to count — and they stand about the yard in twos and threes with the singing coming out through the door at them, and they are glad of the company.
-
-Seven veils. Seven people who would like very much to talk to the witness.`,
-    choices: [
-      { text: 'The one gilding the saints.', goto: 'aglaia', once: true },
-      { text: 'The one with the tithe-box.', goto: 'chrysanthe', once: true },
-      { text: 'The one who was singing and has stepped out.', goto: 'erato', once: true },
-      { text: 'The one who laid him out.', goto: 'phaedra', once: true },
-      { text: 'The one carrying the feast.', goto: 'demetria', once: true },
-      { text: 'The one drinking by the wall.', goto: 'orestes', once: true },
-      { text: 'The one nobody is asking anything of.', goto: 'hypnos', once: true },
-      { text: 'Go back.', goto: 'fold-hub' },
-    ],
-  },
-
-  {
     id: 'aglaia',
     act: ACT,
     location: 'The church yard',
@@ -241,7 +216,7 @@ Seven veils. Seven people who would like very much to talk to the witness.`,
 
 She touches her own veil where her jaw would be. She does it while she is praying, too; you will notice that later.`,
     onEnter: { flags: { met_aglaia: true, measures: { add: 1 } } },
-    choices: [{ text: 'Say you will look.', goto: 'yard' }],
+    choices: [{ text: 'Say you will look.', goto: 'fold-hub' }],
   },
 
   {
@@ -257,7 +232,7 @@ She touches her own veil where her jaw would be. She does it while she is prayin
 
 Every word is true. You would have to know the whole of it for many years to see the shape, and nobody here has ever been permitted to see the whole of anything.`,
     onEnter: { flags: { met_chrysanthe: true, measures: { add: 1 } } },
-    choices: [{ text: 'Thank her for her trouble.', goto: 'yard' }],
+    choices: [{ text: 'Thank her for her trouble.', goto: 'fold-hub' }],
   },
 
   {
@@ -287,11 +262,11 @@ She turns the tuning-fork over in her fingers while she says it — the one she 
     choices: [
       {
         text: 'Ask if you might borrow the tuning-fork.',
-        goto: 'yard',
+        goto: 'fold-hub',
         effect: { tools: ['tuning-fork'] },
         once: true,
       },
-      { text: 'Let her go back in.', goto: 'yard' },
+      { text: 'Let her go back in.', goto: 'fold-hub' },
     ],
   },
 
@@ -318,11 +293,11 @@ She looks at you for slightly too long.
     choices: [
       {
         text: 'Ask if you might keep the needle. She will understand why better than you do.',
-        goto: 'yard',
+        goto: 'fold-hub',
         effect: { tools: ['winding-needle'] },
         once: true,
       },
-      { text: 'Say nothing to that. Not yet.', goto: 'yard' },
+      { text: 'Say nothing to that. Not yet.', goto: 'fold-hub' },
     ],
   },
 
@@ -344,7 +319,7 @@ She says this the way one says anything one has never once been asked to defend.
       gifts: ['bread'],
       flags: { met_demetria: true, reverence: { add: 1 }, measures: { add: 1 } },
     },
-    choices: [{ text: 'Eat, because refusing would wound her.', goto: 'yard' }],
+    choices: [{ text: 'Eat, because refusing would wound her.', goto: 'fold-hub' }],
   },
 
   {
@@ -366,10 +341,10 @@ He laughs, once, with nothing in it.
       flags: { met_orestes: true, measures: { add: 1 } },
     },
     choices: [
-      { text: 'Let him say it. Somebody should hear it.', goto: 'yard' },
+      { text: 'Let him say it. Somebody should hear it.', goto: 'fold-hub' },
       {
         text: 'Ask if you might take the chisel. He is too far gone to miss it.',
-        goto: 'yard',
+        goto: 'fold-hub',
         effect: { tools: ['mason-chisel'] },
         once: true,
       },
@@ -394,7 +369,7 @@ Nineteen years. Two renewals. Not one hearing in which any of it could have been
       clues: ['no-court'],
       flags: { met_hypnos: true, measures: { add: 1 } },
     },
-    choices: [{ text: 'Leave him to his quiet afternoon.', goto: 'yard' }],
+    choices: [{ text: 'Leave him to his quiet afternoon.', goto: 'fold-hub' }],
   },
 
   /* ---------------------------------------------------------------- */

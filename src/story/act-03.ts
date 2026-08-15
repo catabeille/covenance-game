@@ -29,8 +29,11 @@ const COVENANT = PROPOSITIONS.find((p) => p.id === 'covenant')!
 
 export const ACT_THREE: Scene[] = [
   {
+    // A world scene, same as Act I's shrine and Act II's fold — every goto
+    // pointing at 'table-hub' returns the player to the road.
     id: 'table-hub',
     act: ACT,
+    world: 'high-table',
     location: 'The third station — the high table',
     art: 'high-table',
     body: `The table is old and set out in the open, because the Covenance is sworn where anyone might see it. That is the point. That has always been the point. You have always found it moving and you find it moving now, and that is the difficulty.
@@ -45,28 +48,7 @@ You are covered, as everyone is covered. Nobody will sit until you have signed.
 
 You have the strong and unshakeable sense of being looked at from somewhere considerably further up the hill than this.`,
     onEnter: { flags: { at_table: true } },
-    choices: [
-      { text: 'Read the page before you touch the pen.', goto: 'attestation', once: true },
-      {
-        text: 'Ask Kreon, in front of them all, what it was if not first bell.',
-        goto: 'kreon-open',
-        needs: { flag: 'kreon_pressed' },
-        lockedHint: 'He never gave you the second half of that sentence.',
-      },
-      {
-        text: 'Ask Lysias which holding falls to the Chapter this year.',
-        goto: 'lysias-cornered',
-        needs: { clue: 'ledger-pattern' },
-        lockedHint: 'You would be guessing, and Lysias does not lose to guesses.',
-      },
-      {
-        text: 'Look at the one standing at the back who has not moved.',
-        goto: 'enoch',
-        needs: { clue: 'veil-decree' },
-        lockedHint: 'There is somebody at the back of the crowd you keep almost noticing.',
-      },
-      { text: 'Stand, and give your verdict.', goto: 'verdict-delivery' },
-    ],
+    choices: [],
   },
 
   {
