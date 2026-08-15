@@ -97,13 +97,23 @@ There is a man at the foot of it with his hands folded on his chest. Somebody fo
 
 His veil has been put back on. It is not sitting the way a veil sits on the living.
 
-Nobody stands near him. The fold has arranged itself in a wide and perfectly natural circle that happens to have him at the edge of it. Warden Kreon watches you from three paces off. A woman you have never met puts a rosary into your hand, closes your fingers over it, and says she will pray for your discernment.`,
+Nobody stands near him. The fold has arranged itself in a wide and perfectly natural circle that happens to have him at the edge of it. Warden Kreon watches you from three paces off. A woman you have never met puts a rosary into your hand, closes your fingers over it, and says she will pray for your discernment.
+
+A lanthorn hangs unclaimed on the gatepost, left by whoever kept the night vigil. Nobody has come back for it yet.`,
     onEnter: {
       flags: { arrived: true },
       terms: ['kreon', 'stone', 'veil'],
       gifts: ['rosary'],
     },
-    choices: [{ text: 'Go down among them.', goto: 'shrine' }],
+    choices: [
+      {
+        text: 'Take the lanthorn down. It may be useful.',
+        goto: 'shrine',
+        effect: { tools: ['lantern'] },
+        once: true,
+      },
+      { text: 'Go down among them.', goto: 'shrine' },
+    ],
   },
 
   {
@@ -180,6 +190,26 @@ You put your thumb in the hollow the way you would touch a relic. There is nothi
       terms: ['chisel', 'erase-a-name'],
       flags: { measures: { add: 1 } },
     },
+    choices: [
+      { text: 'Take your hand away.', goto: 'shrine' },
+      {
+        text: 'Hold the lanthorn close and look again.',
+        goto: 'look-stone-lantern',
+        needs: { tool: 'lantern' },
+        lockedHint: 'You would need a light of your own; this hollow keeps its own shadow.',
+        once: true,
+      },
+    ],
+  },
+
+  {
+    id: 'look-stone-lantern',
+    act: ACT,
+    location: 'The face of the stone',
+    art: 'boundary-stone',
+    body: `You hold the lanthorn close. In sidelight the cut throws a proper shadow, and the shadow is not a smear — it has corners. Somebody used a straightedge before the chisel ever touched the stone.
+
+Whoever did this did not do it in anger. They did it with a ruler.`,
     choices: [{ text: 'Take your hand away.', goto: 'shrine' }],
   },
 

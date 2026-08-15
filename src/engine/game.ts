@@ -151,6 +151,7 @@ export class Game {
         gained.terms.push(...result.terms)
         gained.approaches.push(...result.approaches)
         gained.gifts.push(...result.gifts)
+        gained.tools.push(...result.tools)
         markVisited(state, current)
       }
 
@@ -197,6 +198,7 @@ export class Game {
       terms: [...fromChoice.terms, ...fromScene.terms],
       approaches: [...fromChoice.approaches, ...fromScene.approaches],
       gifts: [...fromChoice.gifts, ...fromScene.gifts],
+      tools: [...fromChoice.tools, ...fromScene.tools],
     }
     this.panel = 'none'
     save(state)

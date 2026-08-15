@@ -15,6 +15,8 @@ import { CLUES } from '../story/clues.ts'
 import { PROPOSITIONS, TERMS } from '../story/deduction.ts'
 import { APPROACHES } from '../data/character.ts'
 import { WORLDS } from '../data/world.ts'
+import { GIFTS } from '../data/gifts.ts'
+import { TOOLS } from '../data/tools.ts'
 
 export type StoryReport = {
   errors: string[]
@@ -32,6 +34,8 @@ export function validateStory(
   const clueIds = new Set(Object.keys(CLUES))
   const termIds = new Set(Object.keys(TERMS))
   const approachIds = new Set(APPROACHES.map((a) => a.id))
+  const giftIds = new Set(Object.keys(GIFTS))
+  const toolIds = new Set(Object.keys(TOOLS))
 
   if (!sceneIds.has(startSceneId)) {
     errors.push(`START_SCENE "${startSceneId}" does not exist.`)
@@ -51,6 +55,12 @@ export function validateStory(
     for (const termId of effect?.terms ?? []) {
       if (!termIds.has(termId)) errors.push(`${where} grants unknown term "${termId}".`)
     }
+    for (const giftId of effect?.gifts ?? []) {
+      if (!giftIds.has(giftId)) errors.push(`${where} grants unknown gift "${giftId}".`)
+    }
+    for (const toolId of effect?.tools ?? []) {
+      if (!toolIds.has(toolId)) errors.push(`${where} grants unknown tool "${toolId}".`)
+    }
   }
 
   const checkRequirement = (req: Requirement | undefined, where: string): void => {
@@ -62,6 +72,9 @@ export function validateStory(
     }
     if (req?.approach !== undefined && !approachIds.has(req.approach)) {
       errors.push(`${where} requires unknown approach "${req.approach}".`)
+    }
+    if (req?.tool !== undefined && !toolIds.has(req.tool)) {
+      errors.push(`${where} requires unknown tool "${req.tool}".`)
     }
   }
 
@@ -214,11 +227,13 @@ export function validateStory(
 
   const grantableClues = new Set<string>()
   const grantableTerms = new Set<string>()
+  const grantableTools = new Set<string>()
 
   for (const scene of Object.values(scenes)) {
     for (const effect of [scene.onEnter, ...scene.choices.map((c) => c.effect)]) {
       for (const id of effect?.clues ?? []) grantableClues.add(id)
       for (const id of effect?.terms ?? []) grantableTerms.add(id)
+      for (const id of effect?.tools ?? []) grantableTools.add(id)
     }
     // Hidden clues are granted by being highlighted, not by any effect.
     for (const id of secretsIn(scene.body)) grantableClues.add(id)
@@ -232,6 +247,11 @@ export function validateStory(
   for (const id of termIds) {
     if (!grantableTerms.has(id)) {
       warnings.push(`term "${id}" is defined but no scene ever grants it.`)
+    }
+  }
+  for (const id of toolIds) {
+    if (!grantableTools.has(id)) {
+      warnings.push(`tool "${id}" is defined but no scene ever grants it.`)
     }
   }
 

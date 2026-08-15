@@ -96,6 +96,8 @@ export type Effect = {
   approaches?: ApproachId[]
   /** Gifts pressed on the player by the fold. See data/gifts.ts. */
   gifts?: string[]
+  /** Tools the player chose to pick up. See data/tools.ts. */
+  tools?: string[]
   /** Flags to set. Numbers can be incremented with { add: n }. */
   flags?: Record<string, FlagValue | { add: number }>
 }
@@ -111,6 +113,20 @@ export type Gift = {
   name: string
   glyph: string
   /** What it meant when it was given. */
+  text: string
+}
+
+/**
+ * Something the player *chose* to pick up, unlike a gift — the fold presses
+ * gifts on you whether you want them or not; a tool sits there until you
+ * decide it's worth carrying. Some choices check for one with `needs: {
+ * tool: 'id' }`, the same way they check for a clue or a term.
+ */
+export type Tool = {
+  id: string
+  name: string
+  glyph: string
+  /** What it is, in the notebook. */
   text: string
 }
 
@@ -165,6 +181,8 @@ export type Requirement = {
   minClues?: number
   /** Requires a term to have been learned. */
   term?: string
+  /** Requires a tool the player chose to pick up. See data/tools.ts. */
+  tool?: string
   /** Requires suspicion to be at or below this. Pressure, made legible. */
   maxSuspicion?: number
   /**
@@ -324,6 +342,8 @@ export type GameState = {
   terms: string[]
   /** Gift ids the fold has pressed on you. */
   gifts: string[]
+  /** Tool ids the player has chosen to pick up. */
+  tools: string[]
   /**
    * The order the player intends to lay their evidence out in. Clue ids;
    * anything found but not yet arranged falls in after these, in the order it

@@ -139,6 +139,28 @@ One year is missing. Not damaged — excised, cut close to the gutter with a bla
 
 The page before ends mid-sentence. The page after begins as though nothing had been lost. Between them, in the gutter, there is nothing at all. · [[marginal-gloss|Nothing but four words in the margin, in a hand trying very hard not to be recognised: they were told it was an honour.]]`,
     onEnter: { clues: ['register-gap'], flags: { suspicion: { add: 1 } } },
+    choices: [
+      {
+        text: 'Unpick a few stitches at the spine with the needle.',
+        goto: 'kassia-register-needle',
+        needs: { tool: 'winding-needle' },
+        lockedHint: 'The binding is sewn shut. You would need something finer than your fingers.',
+        once: true,
+      },
+      { text: 'Close the book gently.', goto: 'chapel' },
+    ],
+  },
+
+  {
+    id: 'kassia-register-needle',
+    act: ACT,
+    location: 'The vestry',
+    art: 'scroll',
+    body: `The needle goes in the way it was made to, sliding along a seam meant to be opened and closed by exactly this. Three stitches, no more — you are not trying to take the book apart, only to look.
+
+Between the boards and the cover, folded so thin it has gone soft as cloth: a page that was never numbered, in a hand that matches none of the other six.
+
+You do not read it yet. You sew the three stitches back the way you found them, which is its own kind of promise.`,
     choices: [{ text: 'Close the book gently.', goto: 'chapel' }],
   },
 
@@ -255,12 +277,22 @@ A beat.
 
 Then, differently — quieter, and as though it had been waiting a long while behind the other thing:
 
-"It is not poor drainage. I have lain in that field. The ground does not dry, in any season, in any weather, and nothing roots deep in it, and if you put your ear to it you will keep very still for a while and then get up and go home and not mention it."`,
+"It is not poor drainage. I have lain in that field. The ground does not dry, in any season, in any weather, and nothing roots deep in it, and if you put your ear to it you will keep very still for a while and then get up and go home and not mention it."
+
+She turns the tuning-fork over in her fingers while she says it — the one she strikes to hold forty voices to a single note, has done since she was nine years old, and has not once let them wander.`,
     onEnter: {
       clues: ['unclaimed-field'],
       flags: { met_erato: true, measures: { add: 1 } },
     },
-    choices: [{ text: 'Let her go back in.', goto: 'yard' }],
+    choices: [
+      {
+        text: 'Ask if you might borrow the tuning-fork.',
+        goto: 'yard',
+        effect: { tools: ['tuning-fork'] },
+        once: true,
+      },
+      { text: 'Let her go back in.', goto: 'yard' },
+    ],
   },
 
   {
@@ -274,6 +306,8 @@ Then, differently — quieter, and as though it had been waiting a long while be
 
 "I did his hands. Somebody had done them already, badly, so I did them again properly." She says it the way you would say you had straightened a picture. "And his veil. He had it off, you know. In his hand. I put it back on him — you cannot leave a man like that."
 
+She still has the needle through her cuff, the one she uses for winding a shroud closed — small, curved, meant for cloth too far gone to pin.
+
 She looks at you for slightly too long.
 
 "You will want to know who told the Chapter which house to strike, three renewals back. Everybody will say they cannot imagine. Everybody can imagine."`,
@@ -281,7 +315,15 @@ She looks at you for slightly too long.
       terms: ['phaedra'],
       flags: { met_phaedra: true, suspicion: { add: 1 }, measures: { add: 1 } },
     },
-    choices: [{ text: 'Say nothing to that. Not yet.', goto: 'yard' }],
+    choices: [
+      {
+        text: 'Ask if you might keep the needle. She will understand why better than you do.',
+        goto: 'yard',
+        effect: { tools: ['winding-needle'] },
+        once: true,
+      },
+      { text: 'Say nothing to that. Not yet.', goto: 'yard' },
+    ],
   },
 
   {
@@ -323,7 +365,15 @@ He laughs, once, with nothing in it.
       terms: ['orestes'],
       flags: { met_orestes: true, measures: { add: 1 } },
     },
-    choices: [{ text: 'Let him say it. Somebody should hear it.', goto: 'yard' }],
+    choices: [
+      { text: 'Let him say it. Somebody should hear it.', goto: 'yard' },
+      {
+        text: 'Ask if you might take the chisel. He is too far gone to miss it.',
+        goto: 'yard',
+        effect: { tools: ['mason-chisel'] },
+        once: true,
+      },
+    ],
   },
 
   {
@@ -454,8 +504,28 @@ A silence, well kept, outlasts an army. Somebody here learned that a very long t
     },
     choices: [
       { text: 'Look for whatever is older than the ledgers.', goto: 'archive' },
+      {
+        text: 'Strike the tuning-fork against the shelf wall and listen.',
+        goto: 'counting-room-hollow',
+        needs: { tool: 'tuning-fork' },
+        lockedHint: 'You would need something to strike it with, and an ear for where a wall stops being a wall.',
+        once: true,
+      },
       { text: 'Put it all back exactly as you found it.', goto: 'fold-hub' },
     ],
+  },
+
+  {
+    id: 'counting-room-hollow',
+    act: ACT,
+    location: 'The counting room',
+    art: 'vestry',
+    body: `You strike it once, the way she does before every practice, and lay the stem against the plaster the way you have seen her lay it against a chorister's collarbone when a voice will not come true.
+
+Most of the wall answers dead and flat. One handspan of it sings back.
+
+You do not open it. You are not sure yet what you would be opening it for, or who put a hollow behind a wall in a room that is never locked, because nothing in it was ever supposed to need hiding.`,
+    choices: [{ text: 'Step back from the wall.', goto: 'fold-hub' }],
   },
 
   {
@@ -488,8 +558,28 @@ You read it four times. Nothing in the nine lines says one household. Nothing sa
         needs: { approach: 'lettered' },
         lockedHint: 'The later hands mean nothing to you. You can see there are several.',
       },
+      {
+        text: 'Pry up the false bottom with the chisel.',
+        goto: 'archive-chisel',
+        needs: { tool: 'mason-chisel' },
+        lockedHint: 'The board looks loose, if you had something to lift it with.',
+        once: true,
+      },
       { text: 'Put it back. Put all of it back.', goto: 'fold-hub' },
     ],
+  },
+
+  {
+    id: 'archive-chisel',
+    act: ACT,
+    location: 'The counting room — the older box',
+    art: 'vestry',
+    body: `The board under the box is loose, and a chisel is a chisel whatever it was last used for. It comes up on the second try.
+
+Underneath: nothing written down. A boy's boot, small, one of a pair, gone soft and grey with the years. Nobody has catalogued a boot. Nobody was ever going to.
+
+You put the board back exactly as it was. Some things are not evidence. Some things are just where somebody put their grief so they would not have to carry it every day.`,
+    choices: [{ text: 'Close the box very carefully.', goto: 'fold-hub' }],
   },
 
   {

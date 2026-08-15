@@ -18,7 +18,7 @@ import { APPROACHES, PORTRAITS, PRONOUN_SETS } from '../data/character.ts'
 const SAVE_KEY = 'covenance:save:v1'
 
 /** Bump when GameState changes shape; old saves are then discarded on load. */
-const SAVE_VERSION = 6
+const SAVE_VERSION = 7
 
 /**
  * How suspicious the village is of you. Kept as an ordinary numeric flag so
@@ -46,6 +46,7 @@ export function createState(character: Character, startSceneId: string): GameSta
     clues: [],
     terms: [],
     gifts: [],
+    tools: [],
     ordering: [],
     assertions: {},
     flags: {},
@@ -64,6 +65,10 @@ export function hasClue(state: GameState, clueId: string): boolean {
 
 export function hasTerm(state: GameState, termId: string): boolean {
   return state.terms.includes(termId)
+}
+
+export function hasTool(state: GameState, toolId: string): boolean {
+  return state.tools.includes(toolId)
 }
 
 export function hasApproach(state: GameState, approach: ApproachId): boolean {
@@ -110,6 +115,7 @@ export function meetsRequirement(state: GameState, req: Requirement | undefined)
   if (req.approach !== undefined && !hasApproach(state, req.approach)) return false
   if (req.minClues !== undefined && state.clues.length < req.minClues) return false
   if (req.term !== undefined && !hasTerm(state, req.term)) return false
+  if (req.tool !== undefined && !hasTool(state, req.tool)) return false
   if (req.maxSuspicion !== undefined && suspicion(state) > req.maxSuspicion) return false
 
   for (const [key, limit] of Object.entries(req.flagAtMost ?? {})) {
@@ -132,10 +138,11 @@ export type EffectResult = {
   terms: string[]
   approaches: ApproachId[]
   gifts: string[]
+  tools: string[]
 }
 
 export function emptyEffectResult(): EffectResult {
-  return { clues: [], terms: [], approaches: [], gifts: [] }
+  return { clues: [], terms: [], approaches: [], gifts: [], tools: [] }
 }
 
 /**
@@ -169,6 +176,14 @@ export function applyEffect(state: GameState, effect: Effect | undefined): Effec
     }
   }
 
+  const newTools: string[] = []
+  for (const toolId of effect.tools ?? []) {
+    if (!state.tools.includes(toolId)) {
+      state.tools.push(toolId)
+      newTools.push(toolId)
+    }
+  }
+
   const newApproaches: ApproachId[] = []
   for (const approach of effect.approaches ?? []) {
     if (!state.approaches.includes(approach)) {
@@ -192,6 +207,7 @@ export function applyEffect(state: GameState, effect: Effect | undefined): Effec
     terms: newTerms,
     approaches: newApproaches,
     gifts: newGifts,
+    tools: newTools,
   }
 }
 

@@ -27,6 +27,7 @@ import {
 } from '../data/character.ts'
 import { CATEGORY_LABEL, CATEGORY_ORDER, CLUES } from '../story/clues.ts'
 import { getGift } from '../data/gifts.ts'
+import { getTool } from '../data/tools.ts'
 import { renderSky } from './sky.ts'
 import { arrangedClues, concordance, reckoningVerdict } from '../engine/reckoning.ts'
 
@@ -222,6 +223,10 @@ export function renderScene(
       const gift = getGift(id)
       return gift ? `${gift.glyph} ${gift.name}` : id
     }),
+    ...gained.tools.map((id) => {
+      const tool = getTool(id)
+      return tool ? `${tool.glyph} ${tool.name}` : id
+    }),
     ...gained.approaches.map((id) => {
       const approach = APPROACHES.find((a) => a.id === id)
       return approach ? `${approach.glyph} you have learned to be ${approach.name}` : id
@@ -347,6 +352,32 @@ export function renderNotebook(state: GameState): string {
         </ul>
       </section>`
 
+  const tools = state.tools
+    .map((id) => getTool(id))
+    .filter((t): t is NonNullable<typeof t> => t !== undefined)
+
+  const toolSection =
+    tools.length === 0
+      ? ''
+      : `
+      <section class="note__section">
+        <h3 class="note__heading">What you have taken</h3>
+        <ul class="note__list">
+          ${tools
+            .map(
+              (t) => `
+              <li class="note__item">
+                <p class="note__name">
+                  <span class="note__glyph">${escapeHtml(t.glyph)}</span>
+                  ${escapeHtml(t.name)}
+                </p>
+                <p class="note__text">${prose(t.text)}</p>
+              </li>`,
+            )
+            .join('')}
+        </ul>
+      </section>`
+
   return `
     <div class="overlay" data-action="close-overlay">
       <aside class="notebook" role="dialog" aria-label="Notebook" data-stop>
@@ -360,6 +391,7 @@ export function renderNotebook(state: GameState): string {
             ? `<p class="notebook__empty">Nothing written down yet. Look at things; let people talk.</p>`
             : sections
         }
+        ${toolSection}
         ${giftSection}
       </aside>
     </div>`
