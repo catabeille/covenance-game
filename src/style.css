@@ -20,8 +20,8 @@
   --exposure: 0.12;
 
   /* The two ends of the world. Judgement on the left, quiet on the right. */
-  --dawn: #4a2434;
-  --dusk: #1d2733;
+  --dawn: #6b2c40;
+  --dusk: #233c52;
 
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --mono: 'Cascadia Mono', Consolas, 'DejaVu Sans Mono', ui-monospace, monospace;
@@ -49,19 +49,19 @@ body {
   background:
     radial-gradient(
       ellipse 120% 60% at 8% 100%,
-      rgba(168, 86, 60, calc(0.05 + var(--exposure) * 0.42)) 0%,
+      rgba(191, 100, 68, calc(0.12 + var(--exposure) * 0.56)) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse 110% 55% at 94% 100%,
-      rgba(120, 150, 180, calc(0.16 - var(--exposure) * 0.11)) 0%,
+      rgba(133, 168, 201, calc(0.22 - var(--exposure) * 0.1)) 0%,
       transparent 72%
     ),
     linear-gradient(
       100deg,
-      color-mix(in oklab, var(--dawn) calc(38% + var(--exposure) * 46%), var(--ink)) 0%,
+      color-mix(in oklab, var(--dawn) calc(46% + var(--exposure) * 50%), var(--ink)) 0%,
       var(--ink) 46%,
-      color-mix(in oklab, var(--dusk) calc(52% - var(--exposure) * 26%), var(--ink)) 100%
+      color-mix(in oklab, var(--dusk) calc(58% - var(--exposure) * 24%), var(--ink)) 100%
     );
   background-attachment: fixed;
   color: var(--parchment);
@@ -92,7 +92,7 @@ body {
 .sky {
   position: fixed;
   inset: 0 0 auto 0;
-  height: min(34vh, 15rem);
+  height: min(38vh, 17rem);
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
@@ -103,7 +103,7 @@ body {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, calc(0.34 - var(--exposure) * 0.18)) 0%,
+    rgba(0, 0, 0, calc(0.22 - var(--exposure) * 0.14)) 0%,
     transparent 100%
   );
 }
@@ -133,30 +133,32 @@ body {
 }
 
 .orb__body {
-  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
   line-height: 1;
 }
 
 .orb__rays {
-  font-size: 0.8rem;
-  opacity: 0.5;
+  font-size: 1.1rem;
+  opacity: 0.7;
 }
 
-/* Rise is expressed as a fraction of the sky's height. */
+/* Rise is expressed as a fraction of the sky's height. Floors raised (was
+   0.28) so both bodies stay clearly visible even at rest, not just at full
+   rise — the mechanic should read at a glance, not just at its extremes. */
 .orb--sun {
   left: clamp(1rem, 7vw, 5rem);
-  color: #d98a5f;
-  opacity: calc(0.28 + var(--sun-rise) * 0.72);
-  transform: translateY(calc(var(--sun-rise) * -1 * (min(34vh, 15rem) - 3.5rem)));
-  text-shadow: 0 0 calc(0.4rem + var(--sun-rise) * 1.6rem) rgba(217, 138, 95, 0.65);
+  color: #e2985f;
+  opacity: calc(0.55 + var(--sun-rise) * 0.45);
+  transform: translateY(calc(var(--sun-rise) * -1 * (min(38vh, 17rem) - 4rem)));
+  text-shadow: 0 0 calc(0.6rem + var(--sun-rise) * 2.4rem) rgba(226, 152, 95, 0.85);
 }
 
 .orb--moon {
   right: clamp(1rem, 7vw, 5rem);
-  color: #cfd8e4;
-  opacity: calc(0.28 + var(--moon-rise) * 0.72);
-  transform: translateY(calc(var(--moon-rise) * -1 * (min(34vh, 15rem) - 3.5rem)));
-  text-shadow: 0 0 calc(0.4rem + var(--moon-rise) * 1.4rem) rgba(207, 216, 228, 0.5);
+  color: #e2ebf5;
+  opacity: calc(0.55 + var(--moon-rise) * 0.45);
+  transform: translateY(calc(var(--moon-rise) * -1 * (min(38vh, 17rem) - 4rem)));
+  text-shadow: 0 0 calc(0.6rem + var(--moon-rise) * 2rem) rgba(226, 235, 245, 0.75);
 }
 
 .screen {
@@ -462,7 +464,10 @@ body {
   height: 160px;
   display: grid;
   place-items: center;
-  background: var(--ink-raised);
+  /* --ink-raised reads as a UI chrome color (buttons, cards) — a portrait
+     sits in the scene itself, so it should sink into the page's own
+     background instead of standing out as a lighter box on top of it. */
+  background: var(--ink);
   border: 1px solid var(--ink-line);
   border-radius: 2px;
   overflow: hidden;
@@ -533,6 +538,18 @@ body {
 
 .hud__count {
   color: var(--gold-dim);
+}
+
+/* Same look as .walk__key — a small bracketed hotkey, so the HUD reminds
+   you of N/O/V instead of only the one-time guide screen mentioning them. */
+.hud__key {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--gold-dim);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  padding: 0.02rem 0.3rem;
+  margin-right: 0.1rem;
 }
 
 .art {

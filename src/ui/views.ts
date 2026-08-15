@@ -255,17 +255,17 @@ export function renderScene(
         <span class="hud__spacer"></span>
         ${heat > 0 ? renderSuspicion(heat) : ''}
         <button class="btn btn--ghost" data-action="toggle-notebook">
-          Notebook <span class="hud__count">${state.clues.length}/${Object.keys(CLUES).length}</span>
+          <span class="hud__key">N</span> Notebook <span class="hud__count">${state.clues.length}/${Object.keys(CLUES).length}</span>
         </button>
         ${
           state.clues.length >= 3
-            ? `<button class="btn btn--ghost" data-action="toggle-reckoning">Order</button>`
+            ? `<button class="btn btn--ghost" data-action="toggle-reckoning"><span class="hud__key">O</span> Order</button>`
             : ''
         }
         ${
           boardOpen
             ? `<button class="btn btn--ghost" data-action="toggle-verdict">
-                 Verdict${caseIsComplete(state) ? ' <span class="hud__ready">●</span>' : ''}
+                 <span class="hud__key">V</span> Verdict${caseIsComplete(state) ? ' <span class="hud__ready">●</span>' : ''}
                </button>`
             : ''
         }
