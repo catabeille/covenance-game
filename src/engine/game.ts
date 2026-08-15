@@ -70,6 +70,14 @@ export class Game {
   private readonly held = new Set<string>()
   private nearId: string | null = null
 
+  /**
+   * Which screen/scene the viewport was last scrolled for. Panels toggling
+   * open (notebook, verdict, reckoning) re-render but keep this the same, so
+   * only an actual scene change — not "the same page redrawn" — snaps the
+   * reader back to the top instead of leaving them scrolled mid-dialogue.
+   */
+  private lastScrolledTo = ''
+
   constructor(root: HTMLElement) {
     this.root = root
     this.root.addEventListener('click', this.onClick)
@@ -460,6 +468,16 @@ export class Game {
 
     if (this.screen === 'create') {
       this.root.querySelector<HTMLInputElement>('[data-name-input]')?.focus()
+    }
+
+    // A long dialogue scene can leave the reader scrolled well down the
+    // page; the next scene should open at its own top, not wherever the
+    // last one left off. Keyed on screen + sceneId (not just "did render()
+    // run") so opening a panel over the current scene leaves scroll alone.
+    const scrollKey = this.screen === 'scene' ? `scene:${this.state?.sceneId ?? ''}` : this.screen
+    if (scrollKey !== this.lastScrolledTo) {
+      this.lastScrolledTo = scrollKey
+      window.scrollTo(0, 0)
     }
   }
 
