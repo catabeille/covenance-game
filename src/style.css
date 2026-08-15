@@ -240,6 +240,10 @@ body {
   line-height: 1.15;
   margin: 0;
   white-space: pre;
+  /* Lines vary a lot in raw length (leading whitespace is hand-authored,
+     not uniform), so without this each line sits flush against the box's
+     left edge instead of centering on its own axis — same fix as .art. */
+  text-align: center;
 }
 
 .title__name {
@@ -1096,6 +1100,9 @@ body {
   white-space: pre;
   opacity: 0.65;
   transition: opacity 300ms, color 300ms;
+  /* Same fix as .art / .title__mark: lines have uneven hand-authored
+     leading whitespace, so each needs to center on its own axis. */
+  text-align: center;
 }
 
 .walk__mark {
