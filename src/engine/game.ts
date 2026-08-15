@@ -75,6 +75,9 @@ export class Game {
     this.root.addEventListener('click', this.onClick)
     this.root.addEventListener('input', this.onInput)
     this.root.addEventListener('change', this.onChange)
+    this.root.addEventListener('pointerdown', this.onPadDown)
+    this.root.addEventListener('pointerup', this.onPadUp)
+    this.root.addEventListener('pointercancel', this.onPadUp)
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
     window.addEventListener('blur', this.onBlur)
@@ -411,6 +414,29 @@ export class Game {
     if (WALK_KEYS.has(event.key)) this.held.delete(event.key)
   }
 
+  /**
+   * On-screen d-pad, for touch devices with no arrow keys. Pointer capture
+   * means the button keeps receiving events even if the finger drags off it,
+   * so a walk always stops cleanly on release rather than sticking on.
+   */
+  private onPadDown = (event: PointerEvent): void => {
+    const target = event.target as HTMLElement | null
+    const pad = target?.closest<HTMLElement>('[data-walk]')
+    if (!pad) return
+
+    pad.setPointerCapture(event.pointerId)
+    this.held.add(pad.dataset['walk'] === 'left' ? 'ArrowLeft' : 'ArrowRight')
+    event.preventDefault()
+  }
+
+  private onPadUp = (event: PointerEvent): void => {
+    const target = event.target as HTMLElement | null
+    const pad = target?.closest<HTMLElement>('[data-walk]')
+    if (!pad) return
+
+    this.held.delete(pad.dataset['walk'] === 'left' ? 'ArrowLeft' : 'ArrowRight')
+  }
+
   /** Releasing focus must not leave the walker sliding forever. */
   private onBlur = (): void => {
     this.held.clear()
@@ -582,10 +608,10 @@ export class Game {
       el.classList.toggle('is-near', el.dataset['landmark'] === nextId)
     }
 
-    const hud = this.root.querySelector<HTMLElement>('.walk__hud')
-    if (!hud) return
+    const status = this.root.querySelector<HTMLElement>('[data-walk-status]')
+    if (!status) return
 
-    hud.innerHTML = near
+    status.innerHTML = near
       ? `<button class="walk__attend" data-action="attend" data-scene="${near.scene}">
            <span class="walk__key">↑</span> ${near.label}
          </button>`

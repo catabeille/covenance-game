@@ -1212,6 +1212,52 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Hidden on a mouse; touch is the only input that can't hold an arrow key
+   down, so the pad only earns its space when a coarse pointer is present. */
+.walk__dpad {
+  display: none;
+  gap: 0.6rem;
+}
+
+@media (any-pointer: coarse) {
+  .walk__dpad {
+    display: flex;
+  }
+
+  .walk__hud {
+    justify-content: space-between;
+  }
+}
+
+.walk__pad {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--parchment);
+  background: var(--ink-raised);
+  border: 1px solid var(--gold-dim);
+  border-radius: 2px;
+  width: 3rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.walk__pad:active {
+  background: #1d2029;
+  color: var(--gold);
+}
+
+.walk__pad:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 2px;
 }
 
 .walk__attend {
@@ -1265,6 +1311,12 @@ body {
   .walk__sprite {
     width: 50px;
     height: 80px;
+  }
+
+  .walk__pad {
+    width: 2.6rem;
+    height: 2.3rem;
+    font-size: 1.3rem;
   }
 }
 

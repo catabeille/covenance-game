@@ -102,13 +102,18 @@ export function renderWorld(state: GameState, world: WorldMap, x: number): strin
       </div>
 
       <footer class="walk__hud">
-        ${
+        <div class="walk__dpad">
+          <button class="walk__pad" type="button" data-walk="left" aria-label="Walk left">‹</button>
+          <button class="walk__pad" type="button" data-walk="right" aria-label="Walk right">›</button>
+        </div>
+        <div class="walk__status" data-walk-status>${
           near
             ? `<button class="walk__attend" data-action="attend" data-scene="${escapeHtml(near.scene)}">
                  <span class="walk__key">↑</span> ${escapeHtml(near.label)}
                </button>`
             : `<span class="walk__hint"><span class="walk__key">← →</span> walk the road</span>`
         }
+        </div>
       </footer>
     </section>`
 }
