@@ -272,9 +272,18 @@ export function renderScene(
         <button class="btn btn--ghost" data-action="quit-to-title" title="Your progress is saved">Title</button>
       </header>
 
-      ${art ? `<pre class="art" aria-hidden="true">${escapeHtml(art)}</pre>` : ''}
+      ${
+        art && !scene.portrait
+          ? `<pre class="art" aria-hidden="true">${escapeHtml(art)}</pre>`
+          : ''
+      }
 
-      <div class="stage">
+      <div class="stage ${art && scene.portrait ? 'stage--backed' : ''}">
+        ${
+          art && scene.portrait
+            ? `<pre class="stage__backdrop" aria-hidden="true">${escapeHtml(art)}</pre>`
+            : ''
+        }
         ${portraitHtml(scene.portrait)}
         <div class="prose">
           ${scene.speaker ? `<p class="speaker">${escapeHtml(scene.speaker)}</p>` : ''}

@@ -577,6 +577,41 @@ body {
   align-items: flex-start;
 }
 
+/* When a scene has both art and a portrait, the art moves off its own line
+   and becomes the ground the portrait stands on instead — faint enough that
+   the prose still reads first, present enough that the character isn't just
+   floating on black. */
+.stage--backed {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  padding: 1.25rem;
+  margin: -1.25rem;
+}
+
+.stage--backed .portrait,
+.stage--backed .prose {
+  position: relative;
+  z-index: 1;
+}
+
+.stage__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: clamp(0.9rem, 2.6vw, 1.7rem);
+  line-height: 1.2;
+  color: var(--parchment-faint);
+  opacity: 0.14;
+  white-space: pre;
+  pointer-events: none;
+}
+
 .prose {
   flex: 1;
   min-width: 0;
@@ -1066,10 +1101,12 @@ body {
   position: relative;
   height: 19rem;
   overflow: hidden;
-  border-top: 1px solid var(--ink-line);
-  border-bottom: 1px solid var(--ink-line);
+  /* Faint rather than solid — a hard 1px line reads as a UI panel edge and
+     fights the page's own dawn/dusk gradient showing through underneath. */
+  border-top: 1px solid rgba(38, 43, 52, 0.55);
+  border-bottom: 1px solid rgba(38, 43, 52, 0.55);
   /* The road is its own space; the page ground shows through above it. */
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.22) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.14) 100%);
 }
 
 .walk__stage {
@@ -1106,6 +1143,19 @@ body {
   z-index: 0;
 }
 
+/* Sky texture — the empty height above the buildings, filled the same way
+   the ground is: real glyphs at fixed positions, not a CSS pattern. */
+.walk__star {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--parchment-faint);
+  opacity: 0.38;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .walk__landmark,
 .walk__walker {
   position: absolute;
@@ -1115,6 +1165,15 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
+}
+
+/* `transform` gives every landmark its own stacking context, which traps
+   .walk__label's z-index inside it — raising the label alone can never
+   out-rank a sibling .walk__walker (z-index: 2) that way. Only the landmark
+   currently in reach needs to win that fight (its label is the only one
+   ever visible), so promote the whole box, not just the text. */
+.walk__landmark.is-near {
+  z-index: 3;
 }
 
 .walk__art {
@@ -1169,7 +1228,16 @@ body {
 }
 
 .walk__label {
+  /* Landmarks near the player's own entry point can sit close enough on the
+     road that the walker sprite (z-index: 2) would otherwise paint right
+     over this text — a solid chip plus a higher z-index keeps it legible
+     regardless of what else is standing nearby. */
+  position: relative;
+  z-index: 3;
   margin-top: 0.35rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  background: rgba(6, 7, 9, 0.72);
   font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;

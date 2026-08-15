@@ -255,6 +255,18 @@ export type Waypoint = {
   glyph: string
 }
 
+/**
+ * Scenery scattered in the sky rather than on the ground — fills the empty
+ * height above the buildings so a wide viewport doesn't read as mostly dead
+ * air. Purely decorative, same as a waypoint.
+ */
+export type Star = {
+  x: number
+  /** Percent down from the top of the viewport, 0–100. */
+  top: number
+  glyph: string
+}
+
 export type WorldMap = {
   id: string
   /** Total walkable width in px. */
@@ -265,6 +277,7 @@ export type WorldMap = {
   location?: string
   landmarks: Landmark[]
   waypoints?: Waypoint[]
+  stars?: Star[]
 }
 
 export type Scene = {
