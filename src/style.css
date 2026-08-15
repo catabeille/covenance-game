@@ -240,10 +240,16 @@ body {
   line-height: 1.15;
   margin: 0;
   white-space: pre;
-  /* Lines vary a lot in raw length (leading whitespace is hand-authored,
-     not uniform), so without this each line sits flush against the box's
-     left edge instead of centering on its own axis — same fix as .art. */
-  text-align: center;
+  /* Each line's leading whitespace is hand-calibrated so the picture's own
+     "spine" lines up down the middle when rendered left-anchored — e.g.
+     every line of boundary-stone centers its ink on column 18. `.screen
+     --title` sets text-align: center for ordinary text (the tagline), but
+     that's wrong here: it re-centers each line's own span independently,
+     which breaks the alignment between lines instead of preserving it.
+     Overriding back to left lets the block center as a whole (via align-
+     items: center on the flex parent) while keeping lines internally
+     coherent. */
+  text-align: left;
 }
 
 .title__name {
@@ -537,11 +543,14 @@ body {
   margin: 0;
   white-space: pre;
   overflow-x: auto;
-  text-align: center;
-  /* .screen is a flex column with the default stretch — without this the
-     pre fills the full column width before text-align gets a say, so a
-     piece narrower than the column centers its own short lines inside a
-     wide box instead of the box itself sitting centered. */
+  /* Each line's leading whitespace is hand-calibrated to a shared visual
+     spine when rendered left-anchored (every line of boundary-stone, e.g.,
+     centers its ink on column 18) — text-align: center would re-center
+     each line's own span independently and break that alignment instead
+     of preserving it. .screen is a flex column with the default stretch,
+     so align-self: center is what actually centers the block as a whole:
+     without it the pre fills the full column width, and left-anchored
+     text inside a full-width box just sits at the left edge. */
   align-self: center;
 }
 
@@ -1100,9 +1109,11 @@ body {
   white-space: pre;
   opacity: 0.65;
   transition: opacity 300ms, color 300ms;
-  /* Same fix as .art / .title__mark: lines have uneven hand-authored
-     leading whitespace, so each needs to center on its own axis. */
-  text-align: center;
+  /* Left-anchored on purpose — see the long comment on .art. The parent's
+     align-items: center (on .walk__landmark / .walk__walker) centers the
+     block as a whole; text-align: center here would instead re-center each
+     line's own hand-calibrated span and break the picture's alignment. */
+  text-align: left;
 }
 
 .walk__mark {
