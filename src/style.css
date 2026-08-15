@@ -20,8 +20,8 @@
   --exposure: 0.12;
 
   /* The two ends of the world. Judgement on the left, quiet on the right. */
-  --dawn: #c23a63;
-  --dusk: #1f4f8a;
+  --dawn: #eb6f99;
+  --dusk: #777da7;
 
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --mono: 'Cascadia Mono', Consolas, 'DejaVu Sans Mono', ui-monospace, monospace;
@@ -49,12 +49,12 @@ body {
   background:
     radial-gradient(
       ellipse 120% 60% at 8% 100%,
-      rgba(214, 84, 122, calc(0.18 + var(--exposure) * 0.62)) 0%,
+      rgba(235, 111, 153, calc(0.18 + var(--exposure) * 0.62)) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse 110% 55% at 94% 100%,
-      rgba(96, 156, 224, calc(0.28 - var(--exposure) * 0.08)) 0%,
+      rgba(119, 125, 167, calc(0.28 - var(--exposure) * 0.08)) 0%,
       transparent 72%
     ),
     linear-gradient(
