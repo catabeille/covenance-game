@@ -78,7 +78,8 @@ function starHtml(star: Star): string {
 function sceneryHtml(piece: Scenery): string {
   const art = resolveArt(piece.art)
   if (!art) return ''
-  return `<pre class="walk__scenery" aria-hidden="true" style="left:${piece.x}px">${escapeHtml(art)}</pre>`
+  const far = piece.art === 'mountain' ? ' walk__scenery--far' : ''
+  return `<pre class="walk__scenery${far}" aria-hidden="true" style="left:${piece.x}px">${escapeHtml(art)}</pre>`
 }
 
 export function renderWorld(state: GameState, world: WorldMap, x: number): string {

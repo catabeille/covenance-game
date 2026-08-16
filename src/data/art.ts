@@ -30,16 +30,20 @@
  */
 
 export const ART: Record<string, string> = {
-  /* The road in. Few trees, and none of them well. -------------------- */
+  /* The road in — a full horizon, not a huddle in the middle of the
+     frame. This is the one piece meant to run wall to wall in a scene
+     with no portrait beside it, so it breaks the usual 44-column ceiling
+     on purpose; composed on a column grid rather than hand-typed, to
+     keep the slopes lined up. ------------------------------------------ */
   road: String.raw`
-               †
-       ╱╲                    ╱╲
-      ╱░░╲                  ╱░╲
-       ║║                    ║
-  ────────────────────────────────
-          ╲              ╱
-           ╲____________╱
-              ·   ·   ·
+    †                           †               †
+    ╱╲      ╱╲   ╱╲             ╱╲       ╱╲     ╱╲      ╱╲
+   ╱░░╲    ╱░░╲ ╱░░╲           ╱░░╲     ╱░░╲   ╱░░╲    ╱░░╲
+  ╱░░░░╲    ║║   ║║           ╱░░░░╲     ║║   ╱░░░░╲    ║║
+────────────────────────────────────────────────────────────────
+                        ╲              ╱
+                         ╲____________╱
+                            ·   ·   ·
 `,
 
   /* A single roadside tree, for scattering rather than a whole scene. -- */
@@ -47,6 +51,15 @@ export const ART: Record<string, string> = {
    ╱╲
   ╱░░╲
    ║║
+`,
+
+  /* A distant peak, for the horizon line behind a village or a road —
+     scattered at the far edges of a world, never up close. ------------- */
+  mountain: String.raw`
+  †
+  ╱╲
+ ╱░░╲
+╱░░░░╲
 `,
 
   /* An ordinary house — background texture for a street of them, next to
@@ -206,18 +219,18 @@ export const ART: Record<string, string> = {
          '-'
 `,
 
-  /* The Chapter's altar — the IHS host, above the table you sign at. --- */
+  /* The Chapter's altar — a monstrance holding the host, above the table
+     you sign at. Kept in the same architectural box-drawing hand as the
+     buildings rather than the cursive-ASCII register below, since this
+     is the thing you're meant to actually read clearly before signing. */
   'altar-host': String.raw`
-      /'\ /'\
-     |>:IHS:<|
-     _-\ / \ /-_
-     '._ '---' _.'
-      \ '''-''' /
-       '.     .'
-         (ooo)
-          ) (
-         /   \
-        '-...-'
+          †
+       ┌──○──┐
+       │  ‡  │
+       │ ○ ○ │
+       └──┬──┘
+      ════┴════
+        ·   ·
 `,
 
   /* An old scroll, dense with a hand nobody in the fold still reads. --- */

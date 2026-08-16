@@ -86,11 +86,15 @@ export const WORLDS: Record<string, WorldMap> = {
     ],
     // Sparse on purpose — the road in is meant to feel bare, per the art
     // style guide's own note on it ("few trees, and none of them well").
+    // The mountains at either edge are the exception: horizon, not
+    // roadside clutter, so they don't fight that starkness.
     scenery: [
+      { x: 20, art: 'mountain' },
       { x: 180, art: 'tree' },
       { x: 460, art: 'tree' },
       { x: 700, art: 'tree' },
       { x: 1000, art: 'tree' },
+      { x: 1195, art: 'mountain' },
     ],
   },
 
@@ -224,7 +228,9 @@ export const WORLDS: Record<string, WorldMap> = {
     // The fold is a village, not one church alone — a street of ordinary
     // houses and the odd tree, set in the gaps between the people actually
     // worth stopping for, and a couple of grander roofs to break the row.
+    // Mountains close the valley at both ends, behind everything.
     scenery: [
+      { x: 30, art: 'mountain' },
       { x: 75, art: 'tree' },
       { x: 265, art: 'house' },
       { x: 490, art: 'tree' },
@@ -237,6 +243,7 @@ export const WORLDS: Record<string, WorldMap> = {
       { x: 2075, art: 'house' },
       { x: 2350, art: 'tree' },
       { x: 2575, art: 'house' },
+      { x: 2620, art: 'mountain' },
     ],
   },
 
@@ -306,6 +313,12 @@ export const WORLDS: Record<string, WorldMap> = {
       { x: 1230, top: 24, glyph: '°' },
       { x: 1350, top: 12, glyph: '·' },
       { x: 1420, top: 32, glyph: '†' },
+    ],
+    // Nothing to stand behind at the high table, still — no houses, no
+    // trees. Just the mountains closing the horizon at either edge.
+    scenery: [
+      { x: 20, art: 'mountain' },
+      { x: 1420, art: 'mountain' },
     ],
   },
 }

@@ -1176,6 +1176,14 @@ body {
   pointer-events: none;
 }
 
+/* Mountains sit on the horizon behind the village, not in it — bigger
+   silhouettes, hazier than a house or tree so the eye reads them as
+   farther off rather than as one more thing to stand behind. */
+.walk__scenery--far {
+  font-size: 0.9rem;
+  opacity: 0.28;
+}
+
 .walk__landmark,
 .walk__walker {
   position: absolute;
