@@ -84,6 +84,14 @@ export const WORLDS: Record<string, WorldMap> = {
       { x: 1020, top: 14, glyph: '°' },
       { x: 1180, top: 24, glyph: '·' },
     ],
+    // Sparse on purpose — the road in is meant to feel bare, per the art
+    // style guide's own note on it ("few trees, and none of them well").
+    scenery: [
+      { x: 180, art: 'tree' },
+      { x: 460, art: 'tree' },
+      { x: 700, art: 'tree' },
+      { x: 1000, art: 'tree' },
+    ],
   },
 
   fold: {
@@ -212,6 +220,23 @@ export const WORLDS: Record<string, WorldMap> = {
       { x: 2370, top: 30, glyph: '°' },
       { x: 2500, top: 12, glyph: '·' },
       { x: 2610, top: 22, glyph: '†' },
+    ],
+    // The fold is a village, not one church alone — a street of ordinary
+    // houses and the odd tree, set in the gaps between the people actually
+    // worth stopping for, and a couple of grander roofs to break the row.
+    scenery: [
+      { x: 75, art: 'tree' },
+      { x: 265, art: 'house' },
+      { x: 490, art: 'tree' },
+      { x: 710, art: 'house' },
+      { x: 930, art: 'cathedral' },
+      { x: 1150, art: 'tree' },
+      { x: 1370, art: 'house' },
+      { x: 1590, art: 'tree' },
+      { x: 1825, art: 'cathedral' },
+      { x: 2075, art: 'house' },
+      { x: 2350, art: 'tree' },
+      { x: 2575, art: 'house' },
     ],
   },
 

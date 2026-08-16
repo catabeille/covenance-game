@@ -8,7 +8,7 @@
  * Movement itself lives in game.ts; this file only draws.
  */
 
-import type { GameState, Landmark, WorldMap, Waypoint, Star } from '../engine/types.ts'
+import type { GameState, Landmark, WorldMap, Waypoint, Star, Scenery } from '../engine/types.ts'
 import { escapeHtml } from '../engine/text.ts'
 import { meetsRequirement, hasVisited } from '../engine/state.ts'
 import { resolveArt } from '../data/art.ts'
@@ -75,6 +75,12 @@ function starHtml(star: Star): string {
   return `<span class="walk__star" aria-hidden="true" style="left:${star.x}px;top:${star.top}%">${escapeHtml(star.glyph)}</span>`
 }
 
+function sceneryHtml(piece: Scenery): string {
+  const art = resolveArt(piece.art)
+  if (!art) return ''
+  return `<pre class="walk__scenery" aria-hidden="true" style="left:${piece.x}px">${escapeHtml(art)}</pre>`
+}
+
 export function renderWorld(state: GameState, world: WorldMap, x: number): string {
   const near = landmarkInReach(state, world, x)
 
@@ -84,6 +90,7 @@ export function renderWorld(state: GameState, world: WorldMap, x: number): strin
 
   const waypoints = (world.waypoints ?? []).map(waypointHtml).join('')
   const stars = (world.stars ?? []).map(starHtml).join('')
+  const scenery = (world.scenery ?? []).map(sceneryHtml).join('')
 
   const walker = findPortrait(state.character.portraitId)
 
@@ -92,6 +99,7 @@ export function renderWorld(state: GameState, world: WorldMap, x: number): strin
       <div class="walk__viewport" data-walk-viewport>
         <div class="walk__stage" data-walk-stage style="width:${world.width}px">
           ${stars}
+          ${scenery}
           ${waypoints}
           ${marks}
 

@@ -42,6 +42,23 @@ export const ART: Record<string, string> = {
               ·   ·   ·
 `,
 
+  /* A single roadside tree, for scattering rather than a whole scene. -- */
+  tree: String.raw`
+   ╱╲
+  ╱░░╲
+   ║║
+`,
+
+  /* An ordinary house — background texture for a street of them, next to
+     the grander named buildings. --------------------------------------- */
+  house: String.raw`
+   ╱╲
+  ╱──╲
+ │○  ○│
+ │    │
+ └────┘
+`,
+
   /* A body laid out at the roadside, hands folded, veil settled. ------ */
   'the-fallen': String.raw`
 

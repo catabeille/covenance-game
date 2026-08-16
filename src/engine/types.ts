@@ -267,6 +267,17 @@ export type Star = {
   glyph: string
 }
 
+/**
+ * Background buildings and trees — fills out a long road so it reads as a
+ * street or a village rather than one landmark alone in black. Like a
+ * waypoint: drawn, never attended, never gated.
+ */
+export type Scenery = {
+  x: number
+  /** Key into the ART table. */
+  art: string
+}
+
 export type WorldMap = {
   id: string
   /** Total walkable width in px. */
@@ -278,6 +289,7 @@ export type WorldMap = {
   landmarks: Landmark[]
   waypoints?: Waypoint[]
   stars?: Star[]
+  scenery?: Scenery[]
 }
 
 export type Scene = {

@@ -1156,6 +1156,26 @@ body {
   pointer-events: none;
 }
 
+/* A street of ordinary houses and trees, never attended — texture between
+   the real landmarks so a long road doesn't read as one building alone in
+   a lot of black. Dimmer than a landmark's own art so it never competes
+   with the thing actually worth walking up to. */
+.walk__scenery {
+  position: absolute;
+  bottom: 2.25rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1.15;
+  color: var(--parchment-faint);
+  opacity: 0.48;
+  white-space: pre;
+  text-align: left;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .walk__landmark,
 .walk__walker {
   position: absolute;
