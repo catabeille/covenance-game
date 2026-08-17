@@ -606,8 +606,9 @@ body {
   font-family: var(--mono);
   font-size: clamp(0.9rem, 2.6vw, 1.7rem);
   line-height: 1.2;
-  color: var(--parchment-faint);
-  opacity: 0.14;
+  color: var(--parchment-dim);
+  opacity: 0.3;
+  text-shadow: 0 0 0.6rem rgba(201, 162, 39, 0.4);
   white-space: pre;
   pointer-events: none;
 }
@@ -629,6 +630,21 @@ body {
 .prose strong {
   color: #fff;
   font-weight: 600;
+}
+
+/* A passage split out of the main body — its own centered block, not
+   another line in the left-aligned prose column. Used for text that sits
+   beside a world scene's road rather than stacked above it. */
+.prose--aside {
+  max-width: 46ch;
+  margin: 0 auto 1rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--parchment-dim);
+}
+
+.prose--aside:last-child {
+  margin-bottom: 0;
 }
 
 .speaker {
@@ -1168,8 +1184,9 @@ body {
   font-family: var(--mono);
   font-size: 0.62rem;
   line-height: 1.15;
-  color: var(--parchment-faint);
-  opacity: 0.48;
+  color: var(--parchment-dim);
+  opacity: 0.6;
+  text-shadow: 0 0 0.5rem rgba(201, 162, 39, 0.35);
   white-space: pre;
   text-align: left;
   z-index: 0;
@@ -1256,11 +1273,17 @@ body {
 }
 
 .walk__label {
-  /* Landmarks near the player's own entry point can sit close enough on the
-     road that the walker sprite (z-index: 2) would otherwise paint right
-     over this text — a solid chip plus a higher z-index keeps it legible
-     regardless of what else is standing nearby. */
-  position: relative;
+  /* Absolutely positioned (not a flex sibling) so it never adds to
+     .walk__landmark's own height — a label counted as flow content would
+     push the art/portrait above it upward off the shared ground line the
+     walker and background scenery both stand on, even while invisible at
+     opacity: 0. Landmarks near the player's own entry point can sit close
+     enough on the road that the walker sprite (z-index: 2) would otherwise
+     paint right over this text — a solid chip plus a higher z-index keeps
+     it legible regardless of what else is standing nearby. */
+  position: absolute;
+  top: 100%;
+  left: 50%;
   z-index: 3;
   margin-top: 0.35rem;
   padding: 0.1rem 0.4rem;
@@ -1272,7 +1295,7 @@ body {
   text-transform: uppercase;
   color: var(--gold);
   opacity: 0;
-  transform: translateY(-3px);
+  transform: translate(-50%, -3px);
   transition: opacity 240ms, transform 240ms;
   white-space: nowrap;
   pointer-events: none;
@@ -1280,7 +1303,7 @@ body {
 
 .is-near .walk__label {
   opacity: 1;
-  transform: none;
+  transform: translate(-50%, 0);
 }
 
 /* A landmark already attended reads as "done" even from a distance — dimmer

@@ -26,7 +26,7 @@ export const ACT_ONE: Scene[] = [
     id: 'prologue',
     act: ACT,
     location: 'The north road — before the bell',
-    art: 'road',
+    art: 'road-wide',
     body: `The rain has stopped, and you take that as it is meant.
 
 You are here because the Covenance cannot renew itself. It wants a witness from outside the fold — no land here, no blood here, nothing to gain — to walk the three stations, watch the oath sworn, and set a hand to it after. Without that hand it is only a crowd of people saying words in a wet field.
@@ -62,7 +62,7 @@ None of this needs remembering now. It will make sense the moment it matters.`,
     id: 'welcome',
     act: ACT,
     location: 'The north road — the fold comes out',
-    art: 'road',
+    art: 'road-wide',
     body: `They have been waiting since dawn. That is the first thing you understand, and it moves you more than you were ready for.
 
 Bread and salt held up at the height of an offering. A coin folded into your palm by a man who will not let go until you have taken it. A boy runs the whole way down from the church to press a saint's medal on you and then cannot speak at all, and has to be led away by his sister, and is not embarrassed — only overcome.

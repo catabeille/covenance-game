@@ -320,6 +320,13 @@ export type Scene = {
   speaker?: string
   /** Prose. Blank lines separate paragraphs. Supports {name}/{they}/... tokens. */
   body: string
+  /**
+   * A short passage set apart from `body` — its own centered block rather
+   * than another paragraph stacked into the intro prose. Meant for text that
+   * belongs beside a `world` scene's road (a mechanical aside, a beat of
+   * atmosphere) instead of buried above it in the main column.
+   */
+  aside?: string
   /** Applied once, the first time the scene is entered. */
   onEnter?: Effect
   /**

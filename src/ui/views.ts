@@ -85,7 +85,7 @@ function portraitHtml(portraitId: string | undefined): string {
 export function renderTitle(canContinue: boolean): string {
   return `
     <main class="screen screen--title">
-      <pre class="title__mark" aria-hidden="true">${escapeHtml(resolveArt('boundary-stone') ?? '')}</pre>
+      <pre class="title__mark" aria-hidden="true">${escapeHtml(resolveArt('title-mark') ?? '')}</pre>
       <h1 class="title__name">Covenance</h1>
       <p class="title__tagline">An oath is only a promise that someone is watching.</p>
       <nav class="menu">
@@ -243,6 +243,12 @@ export function renderScene(
          </div>`
       : ''
 
+  const aside = scene.aside
+    ? `<p class="prose--aside">${paragraphs(scene.aside, state)
+        .map((p) => prose(p))
+        .join('</p><p class="prose--aside">')}</p>`
+    : ''
+
   const boardOpen = availablePropositions(state).length > 0
   const heat = suspicion(state)
 
@@ -292,6 +298,8 @@ export function renderScene(
       </div>
 
       ${toast}
+
+      ${aside}
 
       ${
         worldHtml

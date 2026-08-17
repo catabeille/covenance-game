@@ -22,7 +22,10 @@ export const WORLDS: Record<string, WorldMap> = {
   shrine: {
     id: 'shrine',
     width: 1220,
-    entry: 300,
+    // 40px short of the-body (x: 320) rather than sitting almost on top of
+    // it (was 300 — a 20px gap the walker and the-fallen's box overlapped
+    // badly at).
+    entry: 260,
     location: 'The first station — the wayside shrine',
     landmarks: [
       {
@@ -101,7 +104,10 @@ export const WORLDS: Record<string, WorldMap> = {
   fold: {
     id: 'fold',
     width: 2650,
-    entry: 150,
+    // 60px short of chapel-door (x: 150), not on top of it — close enough to
+    // be "in reach" (ATTEND_RANGE 70) the moment you arrive, without the
+    // walker and Sister Kassia's sprite spawning fully coincident.
+    entry: 90,
     location: 'The second station — the fold',
     landmarks: [
       {

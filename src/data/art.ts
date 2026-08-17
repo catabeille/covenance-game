@@ -34,7 +34,11 @@ export const ART: Record<string, string> = {
      frame. This is the one piece meant to run wall to wall in a scene
      with no portrait beside it, so it breaks the usual 44-column ceiling
      on purpose; composed on a column grid rather than hand-typed, to
-     keep the slopes lined up. ------------------------------------------ */
+     keep the slopes lined up.
+     Also doubles as the `road-back` landmark's icon out on the shrine
+     road, drawn much smaller there — keep this one no wider than it was,
+     or that landmark balloons far past its neighbours. The wider variant
+     for the two full-screen "north road" scenes lives at `road-wide`. --- */
   road: String.raw`
     †                           †               †
     ╱╲      ╱╲   ╱╲             ╱╲       ╱╲     ╱╲      ╱╲
@@ -44,6 +48,20 @@ export const ART: Record<string, string> = {
                         ╲              ╱
                          ╲____________╱
                             ·   ·   ·
+`,
+
+  /* The wider "north road" banner for `prologue` and `welcome` — same
+     family as `road` above but extended on both sides, with one tree
+     swapped for a wayside chapel. Not used as a landmark icon. --------- */
+  'road-wide': String.raw`
+             †                 †                 †                                   †
+   ╱╲       ╱╲       ╱╲       ┌┴┐      ╱╲       ╱╲       ╱╲       ╱╲       ╱╲       ╱╲       ╱╲
+  ╱░░╲     ╱░░╲     ╱░░╲      │‡│     ╱░░╲     ╱░░╲     ╱░░╲     ╱░░╲     ╱░░╲     ╱░░╲     ╱░░╲
+   ║║     ╱░░░░╲     ║║       └─┘      ║║     ╱░░░░╲     ║║     ╱░░░░╲     ║║     ╱░░░░╲     ║║
+───────────────────────────────────────────────────────────────────────────────────────────────────
+                                          ╲            ╱
+                                          ╲____________╱
+                                              ·   ·   ·
 `,
 
   /* A single roadside tree, for scattering rather than a whole scene. -- */
@@ -72,14 +90,18 @@ export const ART: Record<string, string> = {
  └────┘
 `,
 
-  /* A body laid out at the roadside, hands folded, veil settled. ------ */
+  /* A body laid out at the roadside, hands folded, veil settled. The
+     ground rule matches the box's own width rather than overrunning it —
+     wider, and this landmark's footprint balloons past its neighbours on
+     the shrine road (it stands only 20px from the walker's entry point,
+     so any extra bleed reads as overlapping the character). ----------- */
   'the-fallen': String.raw`
 
 
         ┌───────────┐
         │     ·     │
         └───────────┘
-   ───────────────────────
+        ─────────────
 `,
 
   /* The first station: a shrine grown over a boundary stone. ---------- */
@@ -112,6 +134,21 @@ export const ART: Record<string, string> = {
  │     │     │       │     │     │
  └─────┴─────┴───────┴─────┴─────┘
  ─────────────────────────────────
+`,
+
+  /* The title mark: the boundary stone flanked by the fold's two small
+     chapels, wide enough to stand alone on the title screen. ----------- */
+  'title-mark': String.raw`
+                              †
+                          ┌───────┐
+   †                      │   ‡   │                   †
+  ╱╲                     ╱         ╲                 ╱╲
+ ╱‡ ╲               ·   │   ┌───┐   │   ·           ╱‡ ╲
+╱    ╲                  │   │ † │   │              ╱    ╲
+│ ○  ○│                 │   └───┘   │              │ ○  ○│
+│ ┃  ┃│                 └───────────┘              │ ┃  ┃│
+└──────┘             ·  ═══════════  ·             └──────┘
+               ────────────────────────────────
 `,
 
   /* The same church, the first time — taller, for the arrival. --------- */
@@ -162,16 +199,16 @@ export const ART: Record<string, string> = {
 
   /* The fold: houses turned inward, the crowd standing under them. ---- */
   fold: String.raw`
-                  †
-              ╱╲  ║  ╱╲
-        ╱╲   ╱  ╲ ║ ╱  ╲   ╱╲
-       ╱  ╲ ╱ †  ╲║╱  † ╲ ╱  ╲
-      ╱    ╲│    │║│    │╱    ╲
-      │○ ○ ○│○ ○ ○║○ ○ ○│○ ○ ○ │
-      │┃ ┃ ┃│┃ ┃ ┃║┃ ┃ ┃│┃ ┃ ┃ │
-    ──┴─────┴─────┴┴─────┴─────┴──
-    ──────────────────────────────
-        ·          ·          ·
+   †                         †                     †
+  ╱╲                     ╱╲  ║  ╱╲                ╱╲
+ ╱‡ ╲              ╱╲   ╱  ╲ ║ ╱  ╲   ╱╲         ╱‡ ╲
+╱    ╲            ╱  ╲ ╱ †  ╲║╱  † ╲ ╱  ╲       ╱    ╲
+│ ○  ○│          ╱    ╲│    │║│    │╱    ╲      │ ○  ○│
+│ ┃  ┃│          │○ ○ ○│○ ○ ○║○ ○ ○│○ ○ ○ │     │ ┃  ┃│
+└──────┘         │┃ ┃ ┃│┃ ┃ ┃║┃ ┃ ┃│┃ ┃ ┃ │     └──────┘
+               ──┴─────┴─────┴┴─────┴─────┴──
+  ────────────────────────────────────────────────────
+    ·              ·          ·          ·         ·
 `,
 
   /* The third station. Nothing to stand behind. ----------------------- */

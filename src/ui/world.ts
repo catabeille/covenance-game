@@ -96,7 +96,7 @@ export function renderWorld(state: GameState, world: WorldMap, x: number): strin
   const walker = findPortrait(state.character.portraitId)
 
   return `
-    <section class="walk" data-walk aria-label="${escapeHtml(world.location ?? 'The road')}">
+    <section class="walk" data-walk-root aria-label="${escapeHtml(world.location ?? 'The road')}">
       <div class="walk__viewport" data-walk-viewport>
         <div class="walk__stage" data-walk-stage style="width:${world.width}px">
           ${stars}

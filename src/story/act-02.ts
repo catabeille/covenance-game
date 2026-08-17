@@ -76,9 +76,8 @@ Nobody asks for the rosary back. Nobody would be so crude. It simply sits in you
 
 *Righteousness like water flowed before them, and mercy like dew was scattered over the earth. And thus shall it be with them for ever and for ever.*
 
-Forty voices, none of them trained, every one of them certain. It is beautiful. It has always been beautiful, and nothing you are about to learn will make it less so — which is exactly the trouble. Beauty was never proof of anything.
-
-You are not needed for this part. You are needed at the end of it — which means you have exactly as long as the singing lasts.
+Forty voices, none of them trained, every one of them certain. It is beautiful. It has always been beautiful, and nothing you are about to learn will make it less so — which is exactly the trouble. Beauty was never proof of anything.`,
+    aside: `You are not needed for this part. You are needed at the end of it — which means you have exactly as long as the singing lasts.
 
 Not everybody goes in. There are always those with something to carry, something to stir, something to count, and they stand about the yard in twos and threes with the singing coming out through the door at them, glad of the company.`,
     choices: [],
